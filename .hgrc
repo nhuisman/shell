@@ -1,0 +1,17 @@
+[ui]
+# Name data to appear in commits
+username = Nathan Huisman <nathan.huisman@igt.com>
+
+[extensions]
+graphlog =
+shelve =
+rebase = 
+color =
+pager =
+transplant =
+
+[color]
+mode = ansi
+
+[pager]
+pager = LESS='FRX' less
