@@ -9,9 +9,18 @@ rebase =
 color =
 pager =
 transplant =
+strip =
 
 [color]
 mode = ansi
 
 [pager]
 pager = LESS='FRX' less
+
+[alias]
+st = !hg status $($HG root) $HG_ARGS
+
+[merge-tools]
+vimdiff.executable = vimdiff
+vimdiff.args = -f -d $output -M $local $base $other -c "wincmd J" -c "set modifiable" -c "set write"
+vimdiff.premerge = keep
