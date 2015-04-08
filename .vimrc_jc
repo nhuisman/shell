@@ -1,0 +1,120 @@
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+set nocompatible  " note: this also enables modelines.  see ``set modeline?``
+set guioptions=ai
+
+set popt=paper:letter  " no A4 here!
+set backspace=indent,eol,start  " allow backspacing over everything in insert mode
+set nobackup  " do not keep a backup file, use versions instead
+set history=50  " keep 50 lines of command line history
+set ruler  " show the cursor position all the time
+set showcmd  " display incomplete commands
+set incsearch  " do incremental searching
+
+" fix tabbing: make tab key insert 4 spaces at a time and make embedded tab
+" chars display as the 8-char spaces that they are; see exceptions in au below
+set tabstop=8
+set shiftwidth=4
+set softtabstop=4
+
+" show tabs, trailing spaces, and long lines
+set list
+set listchars=tab:>-,trail:-,extends:>
+
+" show non-printing chars as hex codes
+set display=uhex
+
+" show matching parens
+set showmatch
+
+" [2006-03-15 JC]  added guifont
+" set guifont=Bitstream\ Vera\ Sans\ Mono\ 7
+" set printfont=Bitstream\ Vera\ Sans\ Mono\ 10
+" [2014-08-12 JC] prettiness
+set guifont=Inconsolata\ 9
+set printfont=Bitstream\ Vera\ Sans\ Mono\ 10
+" [2014-06-10 JC] for macs
+" set guifont=Menlo\ 7
+" set printfont=Menlo\ 10
+" [2006-09-18 JC] i want to print using kde's print dialog
+" [2011-10-26 JC] this doesn't work in kde4
+" set pdev=SHARP_MX-C311
+" set printexpr=system('kprinter'\ .\ '\ '\ .\ v:fname_in)\ .\ delete(v:fname_in)\ +\ v:shell_error
+
+" [2010-09-01 JC] easier on the eyes
+colorscheme koehler
+
+" [2006-03-21 JC] autodetect text files
+au BufRead,BufNewFile *.txt setfiletype text
+au BufRead,BufNewFile *.j2 setfiletype jinja
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
+" Underline the current line (uses default AsciiDoc heading levels)
+map <F1> yypVr=
+map <F2> yypVr-
+map <F3> yypVr~
+map <F4> yypVr^
+map <F5> yypVr+
+
+" [2006-03-29 JC] adding some useful abbreviations for insert mode
+iab ymd <c-r>=strftime("[%Y-%m-%d]")<cr>
+iab ymdjc <c-r>=strftime("[%Y-%m-%d JC]")<cr>
+
+let g:pymode_folding = 0
+let g:pymode_utils_whitespaces = 0
+let g:pymode_lint_ignore = "E123,E126"
+let g:pymode_indent = 0
+
+" [2015-03-31 JC] don't hang for non ropeproject-ish things
+" let g:pymode_rope_lookup_project = 0
+
+" [2011-10-04 JC] use pathogen to manage vim plugins
+filetype off
+call pathogen#infect()
+call pathogen#helptags()
+
+" [2015-01-26 JC] for ag to find filenames too (via -g)
+let g:agprg="nag --column"
+
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch on highlighting the last used search pattern.
+if &t_Co > 2 || has("gui_running")
+  syntax on
+  set hlsearch
+endif
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+
+  " Enable file type detection and associated indentation
+  filetype plugin indent on
+
+  " Put these in an autocmd group, so that we can delete them easily.
+  augroup vimrcEx
+  au!
+
+  " For all text files set 'textwidth' to 69 chars and autoindent
+  autocmd FileType text setlocal textwidth=69 autoindent expandtab noshowmatch spell spelllang=en_us
+  " Fix tabs for makefiles
+  " autocmd FileType make setlocal noet
+  " Use spaces only in python files
+  autocmd FileType python setlocal textwidth=79 expandtab
+  autocmd FileType ruby setlocal shiftwidth=2 softtabstop=2 et
+  autocmd FileType javascript setlocal sw=2 sts=2 ts=2 et
+  autocmd FileType yaml setlocal sw=2 sts=2 ts=2 ai et
+
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  " (happens when dropping a file on gvim).
+  autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g`\"" |
+    \ endif
+  augroup END " end of vimrcEx augroup
+
+else
+
+  set autoindent        " always set autoindenting on
+
+endif " has("autocmd")
