@@ -9,7 +9,7 @@ rebase =
 color =
 pager =
 transplant =
-strip =
+mq =
 
 [color]
 mode = ansi

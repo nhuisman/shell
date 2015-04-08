@@ -26,7 +26,6 @@ augroup BWCCreateDir
 augroup END
 
 " VUNDLE STUFF
-
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -44,5 +43,9 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 Bundle 'rking/ag.vim'
 
+
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cmap w!! w !sudo tee > /dev/null %
+
+
+" http://valloric.github.io/YouCompleteMe/#intro
